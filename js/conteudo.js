@@ -106,7 +106,10 @@ const CONTEUDO = {
           tipo: "selecao_e_texto",
           titulo: "Trabalho e necessidade emocional",
           instrucao: "O que você espera que o trabalho te dê além de dinheiro? Selecione o que reconhecer em você.",
-          opcoes: ["Reconhecimento", "Pertencimento", "Identidade", "Propósito", "Aprovação"],
+          opcoes: ["Reconhecimento", "Pertencimento", "Identidade", "Propósito", "Aprovação",
+                   "Status / prestígio", "Autonomia", "Liberdade geográfica", "Estabilidade / segurança",
+                   "Aprendizado constante", "Desafio", "Flexibilidade de horário",
+                   "Equilíbrio com a vida pessoal", "Contribuição / impacto", "Conexão / amizades"],
           pergunta_texto: "Alguma dessas necessidades já prejudicou uma decisão profissional sua? Como?"
         },
         {
