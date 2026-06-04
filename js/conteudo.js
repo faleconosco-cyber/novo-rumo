@@ -66,7 +66,13 @@ const CONTEUDO = {
             itens: ["comunicação", "vendas", "negociação", "organização", "liderança", "ensinar / treinar",
                     "atendimento ao público", "criatividade", "resolução de problemas", "escrita",
                     "marketing", "planejamento", "trabalho em equipe", "gestão", "atenção a detalhes",
-                    "aprender rápido", "improviso", "relacionamento com pessoas", "análise", "produção / mão na massa"]
+                    "aprender rápido", "improviso", "relacionamento com pessoas", "análise", "produção / mão na massa",
+                    "realizar cálculos", "montar e editar planilhas", "usar inteligência artificial",
+                    "falar outros idiomas", "lidar com dinheiro / finanças", "falar em público",
+                    "escutar e acolher pessoas", "mediar conflitos", "pesquisar informação",
+                    "usar redes sociais", "criar conteúdo (foto, vídeo, texto)", "cuidar / zelar de algo ou alguém",
+                    "vender ideias e convencer", "lidar com tecnologia e aplicativos", "coordenar tarefas e prazos",
+                    "ter paciência e persistência", "adaptar-se a mudanças", "dar e receber feedback"]
           }
         },
         {
