@@ -176,7 +176,8 @@ const CONTEUDO = {
           opcoes: [
             { rotulo: "Duas frentes ao mesmo tempo", ajuda: "Atuar em duas atividades simultâneas" },
             { rotulo: "Combinar áreas numa função só", ajuda: "Unir duas competências num mesmo trabalho" },
-            { rotulo: "Transição em etapas", ajuda: "Começar por um território e migrar para outro com o tempo" }
+            { rotulo: "Transição em etapas", ajuda: "Começar por um território e migrar para outro com o tempo" },
+            { rotulo: "Não considero essa possibilidade", ajuda: "Prefiro focar em um único caminho" }
           ],
           pergunta_texto: "Qual faz mais sentido pra você agora, e por quê?"
         },
