@@ -12,6 +12,30 @@ function el(tag, props = {}, filhos = []) {
   return e;
 }
 
+// Busca o título de um módulo pelo seu id (para mostrar nomes amigáveis na síntese).
+function tituloDoModulo(id) {
+  for (const et of CONTEUDO.etapas) {
+    for (const m of et.modulos) { if (m.id === id) return m.titulo; }
+  }
+  return id;
+}
+
+// Converte uma resposta salva (objeto/array/texto) em texto legível, sem código.
+function respostaLegivel(valor) {
+  if (valor == null) return "";
+  if (typeof valor === "string") return valor;
+  if (Array.isArray(valor)) return valor.filter(x => x != null && x !== "").map(respostaLegivel).join(", ");
+  if (typeof valor === "object") {
+    return Object.entries(valor).map(([k, v]) => {
+      if (k === "experiencias" && Array.isArray(v)) {
+        return v.map((exp, i) => "Experiência " + (i + 1) + ": " + respostaLegivel(exp)).join("\n");
+      }
+      return respostaLegivel(v);
+    }).filter(t => t && t.trim()).join("\n");
+  }
+  return String(valor);
+}
+
 function cabecalho(modulo) {
   const frag = document.createDocumentFragment();
   frag.appendChild(el("h2", { text: modulo.titulo }));
@@ -115,14 +139,19 @@ function renderizarModulo(modulo, valor, aoMudar) {
       });
     },
     sintese: () => {
-      // Mostra respostas anteriores como apoio (somente leitura)
-      const apoio = el("div", { class: "card", style: "background:#e9efe6;" });
-      apoio.appendChild(el("h3", { text: "Para te ajudar, o que você já trouxe:" }));
-      (modulo.puxar_de || []).forEach(id => {
-        const r = Armazenamento.lerResposta(id);
-        if (r) apoio.appendChild(el("pre", { text: id + ": " + JSON.stringify(r), style: "white-space:pre-wrap; font-size:.8rem;" }));
-      });
-      card.appendChild(apoio);
+      // Mostra respostas anteriores como apoio (somente leitura), em texto legível.
+      const itens = (modulo.puxar_de || [])
+        .map(id => ({ titulo: tituloDoModulo(id), texto: respostaLegivel(Armazenamento.lerResposta(id)).trim() }))
+        .filter(x => x.texto);
+      if (itens.length) {
+        const apoio = el("div", { class: "card", style: "background:#e9efe6;" });
+        apoio.appendChild(el("h3", { text: "Para te ajudar, o que você já trouxe:" }));
+        itens.forEach(x => {
+          apoio.appendChild(el("p", { text: x.titulo, style: "font-weight:700; margin-bottom:2px;" }));
+          apoio.appendChild(el("p", { text: x.texto, style: "white-space:pre-wrap; margin-bottom:14px;" }));
+        });
+        card.appendChild(apoio);
+      }
       if (modulo.campo) {
         card.appendChild(el("label", { text: modulo.campo.rotulo }));
         card.appendChild(textarea(valor.p0, v => { valor.p0 = v; aoMudar(valor); }, modulo.campo.placeholder));
