@@ -160,8 +160,8 @@ const CONTEUDO = {
         {
           id: "e3_territorios",
           tipo: "territorios",
-          titulo: "Territórios possíveis",
-          instrucao: "Dado quem você é e o que precisa existir pra você permanecer, qual desses territórios tem mais condições de entregar isso? Reflita sobre cada um.",
+          titulo: "Territórios profissionais possíveis",
+          instrucao: "Considerando quem você é e do que você precisa para permanecer, qual desses territórios tem mais condições de entregar isso? Reflita sobre cada um.",
           territorios: [
             { rotulo: "Empresa privada", ajuda: "Trabalhar contratada por uma empresa" },
             { rotulo: "Empresa pública", ajuda: "Concurso, órgão público, estabilidade" },
