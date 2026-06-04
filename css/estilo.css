@@ -1,0 +1,140 @@
+/* ===== Identidade Visual Instituto Rumo — variação bege & verde ===== */
+:root {
+  /* Cores principais: verdes do Rumo */
+  --verde-profundo: #3B503F; /* títulos, ações, texto de destaque */
+  --verde-agua: #91B096;     /* apoio, bordas, realces suaves */
+  /* Fundo bege acolhedor */
+  --bege: #EFE7D6;           /* fundo principal */
+  --bege-escuro: #DED2BB;    /* bordas, trilhos */
+  --preto-suave: #282828;    /* texto */
+  --branco: #FFFFFF;
+  /* Cores da paleta Rumo mantidas para detalhes pontuais */
+  --amarelo: #FDBB71;        /* realce ocasional */
+  --azul: #3E658E;
+  --laranja: #FD745D;
+  /* Aliases semânticos: o resto do CSS usa estes nomes */
+  --cor-titulo: var(--verde-profundo);
+  --cor-acao: var(--verde-profundo);   /* CTAs em verde */
+  --cor-destaque: var(--verde-agua);
+  --cor-fundo: var(--bege);
+  --sombra: 0 2px 12px rgba(59,80,63,0.12);
+  --raio: 14px;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: var(--cor-fundo);
+  color: var(--preto-suave);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 20px 80px;
+}
+
+h1, h2, h3 { color: var(--cor-titulo); font-weight: 800; line-height: 1.2; }
+h1 { font-size: 1.8rem; margin-bottom: 8px; }
+h2 { font-size: 1.4rem; margin-bottom: 6px; }
+h3 { font-size: 1.1rem; margin-bottom: 4px; }
+p { margin-bottom: 12px; }
+
+.destaque { color: var(--verde-agua); font-weight: 700; }
+
+/* Botões */
+.btn {
+  display: inline-block;
+  background: var(--cor-acao);
+  color: var(--branco);
+  border: none;
+  border-radius: var(--raio);
+  padding: 14px 28px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity .2s, transform .1s;
+}
+.btn:hover { opacity: .92; }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+.btn-secundario { background: var(--verde-agua); }
+
+/* Campos */
+label { display: block; font-weight: 600; color: var(--cor-titulo); margin: 16px 0 6px; }
+textarea, input[type="text"], input[type="number"], input[type="password"] {
+  width: 100%;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 12px 14px;
+  border: 2px solid var(--bege-escuro);
+  border-radius: var(--raio);
+  background: var(--branco);
+  color: var(--preto-suave);
+}
+textarea { min-height: 90px; resize: vertical; }
+textarea:focus, input:focus { outline: none; border-color: var(--verde-profundo); }
+
+/* Cartão de módulo */
+.card {
+  background: var(--branco);
+  border-radius: var(--raio);
+  padding: 24px;
+  box-shadow: var(--sombra);
+  margin-bottom: 20px;
+}
+
+/* Barra de progresso global */
+.progresso-global {
+  position: sticky; top: 0; z-index: 10;
+  background: var(--cor-fundo);
+  padding: 12px 0;
+}
+.progresso-trilho { height: 8px; background: var(--bege-escuro); border-radius: 99px; overflow: hidden; }
+.progresso-preenchido { height: 100%; background: var(--verde-profundo); width: 0%; transition: width .3s; }
+.progresso-rotulo { font-size: .8rem; color: var(--verde-profundo); font-weight: 700; margin-top: 6px; text-transform: uppercase; letter-spacing: .5px; }
+
+/* Chips de seleção */
+.chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0; }
+.chip {
+  border: 2px solid var(--verde-profundo); color: var(--verde-profundo); background: var(--branco);
+  border-radius: 99px; padding: 8px 16px; cursor: pointer; font-weight: 600; font-size: .9rem;
+}
+.chip.ativo { background: var(--verde-profundo); color: var(--branco); }
+
+/* Salvo automaticamente */
+.salvo { font-size: .8rem; color: var(--verde-agua); font-weight: 600; margin-top: 10px; }
+
+/* Escala 0-10 */
+.escala { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0; }
+.escala button {
+  width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--verde-profundo);
+  background: var(--branco); color: var(--verde-profundo); font-weight: 700; cursor: pointer;
+}
+.escala button.ativo { background: var(--verde-profundo); border-color: var(--verde-profundo); color: var(--branco); }
+
+/* Tabela de orçamento */
+table.orcamento { width: 100%; border-collapse: collapse; margin: 12px 0; }
+table.orcamento th, table.orcamento td { padding: 8px; text-align: left; border-bottom: 1px solid var(--bege-escuro); }
+table.orcamento th { color: var(--verde-profundo); font-size: .85rem; text-transform: uppercase; }
+table.orcamento input { padding: 8px; }
+
+/* Responsivo */
+@media (max-width: 600px) {
+  h1 { font-size: 1.5rem; }
+  .card { padding: 18px; }
+  .container { padding: 16px 14px 70px; }
+}
+
+/* Impressão (PDF da jornada) */
+@media print {
+  .progresso-global, .btn, .nav-rodape { display: none !important; }
+  body { background: #fff; }
+  .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+}

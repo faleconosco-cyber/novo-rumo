@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Novo Rumo — Acesso</title>
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <div class="container">
+    <div class="card" style="margin-top:60px; text-align:center;">
+      <h1>Novo Rumo</h1>
+      <p>Sua história já contém as respostas. Vamos organizar o próximo passo.</p>
+      <label for="senha" style="text-align:left;">Digite sua senha de acesso</label>
+      <input type="password" id="senha" placeholder="Senha recebida após a compra">
+      <p id="erro" class="destaque" style="display:none; margin-top:10px;"></p>
+      <button class="btn" id="entrar" style="margin-top:16px;">Entrar</button>
+    </div>
+  </div>
+  <script src="js/armazenamento.js"></script>
+  <script src="js/acesso.js"></script>
+  <script>
+    document.getElementById("entrar").addEventListener("click", () => {
+      const senha = document.getElementById("senha").value;
+      const r = validarAcesso(senha);
+      if (r.ok) { window.location.href = "app.html"; }
+      else { const e = document.getElementById("erro"); e.textContent = r.mensagem; e.style.display = "block"; }
+    });
+    document.getElementById("senha").addEventListener("keydown", ev => { if (ev.key === "Enter") document.getElementById("entrar").click(); });
+  </script>
+</body>
+</html>

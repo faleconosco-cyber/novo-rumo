@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Novo Rumo — Concluído</title>
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <div class="container">
+    <div class="card" style="margin-top:50px; text-align:center;">
+      <h1>Você chegou até aqui.</h1>
+      <p>E isso já diz muito sobre você. Ao longo desse processo, você olhou para a sua história não pela lente da falha, mas como matéria-prima de um caminho com sentido. O próximo passo é seu — e agora você tem um mapa para dar esse passo com mais clareza.</p>
+      <p class="destaque">Sua história ainda está em movimento.</p>
+      <button class="btn" id="whats" style="margin-top:16px;">Quero conversar com a Cláudia</button>
+      <br>
+      <button class="btn btn-secundario" id="pdf" style="margin-top:14px;">Baixar o mapa da minha jornada (PDF)</button>
+    </div>
+  </div>
+  <script src="js/conteudo.js"></script>
+  <script src="js/armazenamento.js"></script>
+  <script src="js/pdf.js"></script>
+  <script>
+    document.getElementById("whats").addEventListener("click", () => {
+      const msg = encodeURIComponent("Olá Cláudia! Concluí o Novo Rumo e quero aprofundar com acompanhamento individual.");
+      window.open("https://wa.me/" + WHATSAPP_NUMERO + "?text=" + msg, "_blank");
+    });
+    document.getElementById("pdf").addEventListener("click", gerarPDF);
+  </script>
+</body>
+</html>
