@@ -126,7 +126,7 @@ const CONTEUDO = {
           titulo: "O que preciso desenvolver",
           instrucao: "Escolha um ponto só — o mais importante.",
           perguntas: [
-            "Das coisas que aparecem na minha forma de agir e de me relacionar, qual é a que mais vai me atrapalhar no próximo movimento?",
+            "Das coisas que aparecem na minha forma de agir e de me relacionar, qual é a que talvez possa me atrapalhar mais no próximo movimento?",
             "Qual é uma ação simples para começar a trabalhar nisso?"
           ]
         },
