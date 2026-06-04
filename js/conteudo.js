@@ -205,10 +205,13 @@ const CONTEUDO = {
       modulos: [
         {
           id: "e4_mudanca",
-          tipo: "selecao_e_texto",
+          tipo: "grupos_e_texto",
           titulo: "Que tipo de mudança é essa",
           instrucao: "Leia o seu momento com honestidade e calibre a expectativa antes de montar o plano.",
-          opcoes: ["Dentro da mesma área", "Virada de rota", "Mudança gradual", "Ruptura"],
+          grupos: [
+            { rotulo: "O que muda?", opcoes: ["Dentro da mesma área", "Virada de rota (mudar de direção)"] },
+            { rotulo: "Em que ritmo?", opcoes: ["Aos poucos (gradual)", "De uma vez (ruptura)"] }
+          ],
           pergunta_texto: "Em uma frase: que tipo de mudança você está prestes a fazer?"
         },
         {

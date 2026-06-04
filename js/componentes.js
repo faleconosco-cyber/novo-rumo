@@ -294,6 +294,27 @@ function renderizarModulo(modulo, valor, aoMudar) {
       card.appendChild(el("label", { text: modulo.pergunta_texto }));
       card.appendChild(textarea(valor.texto, v => { valor.texto = v; aoMudar(valor); }));
     },
+    grupos_e_texto: () => {
+      valor.grupos = valor.grupos || {};
+      modulo.grupos.forEach((g, gi) => {
+        card.appendChild(el("label", { text: g.rotulo }));
+        const chips = el("div", { class: "chips" });
+        g.opcoes.forEach(op => {
+          const c = el("span", { class: "chip", text: op });
+          if (valor.grupos[gi] === op) c.classList.add("ativo");
+          c.addEventListener("click", () => {
+            chips.querySelectorAll(".chip").forEach(x => x.classList.remove("ativo"));
+            c.classList.add("ativo"); valor.grupos[gi] = op; aoMudar(valor);
+          });
+          chips.appendChild(c);
+        });
+        card.appendChild(chips);
+      });
+      if (modulo.pergunta_texto) {
+        card.appendChild(el("label", { text: modulo.pergunta_texto }));
+        card.appendChild(textarea(valor.texto, v => { valor.texto = v; aoMudar(valor); }));
+      }
+    },
     duas_colunas: () => {
       card.appendChild(el("label", { text: modulo.coluna_a }));
       card.appendChild(textarea(valor.a, v => { valor.a = v; aoMudar(valor); }));
