@@ -131,14 +131,34 @@ function renderizarModulo(modulo, valor, aoMudar) {
       });
     },
     texto_com_apoio: () => {
+      // Só o primeiro campo (p0) recebe os chips clicáveis de apoio.
+      const ta = textarea(valor.p0, v => { valor.p0 = v; aoMudar(valor); });
       modulo.perguntas.forEach((p, i) => {
         card.appendChild(el("label", { text: p }));
-        card.appendChild(textarea(valor["p" + i], v => { valor["p" + i] = v; aoMudar(valor); }));
+        if (i === 0) card.appendChild(ta);
+        else card.appendChild(textarea(valor["p" + i], v => { valor["p" + i] = v; aoMudar(valor); }));
       });
       const det = el("details", {});
       det.appendChild(el("summary", { text: modulo.apoio.titulo }));
+      det.appendChild(el("p", { class: "salvo", text: "Clique em uma habilidade para adicioná-la à sua resposta." }));
       const chips = el("div", { class: "chips" });
-      modulo.apoio.itens.forEach(it => chips.appendChild(el("span", { class: "chip", text: it })));
+      modulo.apoio.itens.forEach(it => {
+        const c = el("span", { class: "chip", text: it });
+        c.addEventListener("click", () => {
+          const atual = ta.value.trim();
+          // evita duplicar
+          const jaTem = atual.toLowerCase().split(/[,;\n]+/).map(s => s.trim()).includes(it.toLowerCase());
+          if (jaTem) {
+            c.classList.remove("ativo");
+            return;
+          }
+          ta.value = atual ? atual + ", " + it : it;
+          valor.p0 = ta.value;
+          aoMudar(valor);
+          c.classList.add("ativo");
+        });
+        chips.appendChild(c);
+      });
       det.appendChild(chips);
       card.appendChild(det);
     },
