@@ -127,7 +127,7 @@ const CONTEUDO = {
           instrucao: "Escolha um ponto só — o mais importante.",
           perguntas: [
             "Das coisas que aparecem na minha forma de agir e de me relacionar, qual é a que talvez possa me atrapalhar mais no próximo movimento?",
-            "Qual é uma ação simples para começar a trabalhar nisso?"
+            "Qual ação mais simples eu posso ter para começar a modificar isso?"
           ]
         },
         {
