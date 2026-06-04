@@ -137,7 +137,7 @@ const CONTEUDO = {
           instrucao: "Pense no momento em que a novidade passa, o entusiasmo cai e a dificuldade aparece.",
           perguntas: [
             "Como você costuma reagir nesse momento?",
-            "O que você vai fazer diferente desta vez?"
+            "O que você pretende fazer de diferente dessa vez?"
           ]
         }
       ]
