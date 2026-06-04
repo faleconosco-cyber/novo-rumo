@@ -269,7 +269,7 @@ const CONTEUDO = {
           id: "e4_segundo_plano",
           tipo: "texto",
           titulo: "Em segundo plano",
-          instrucao: "Uma decisão tomada com antecedência tira o peso do medo de errar e transforma a mudança numa aposta consciente.",
+          instrucao: "Uma decisão tomada com reflexão e pesquisa tira o peso do medo de errar e transforma a mudança numa aposta consciente.",
           perguntas: [
             "Daqui a quantos meses você vai reavaliar se esse caminho está funcionando?",
             "Se nesse prazo não estiver funcionando, o que você vai fazer?"
