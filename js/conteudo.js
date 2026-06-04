@@ -80,7 +80,7 @@ const CONTEUDO = {
           tipo: "eixos",
           titulo: "O que precisa existir pra eu conseguir permanecer",
           instrucao: "Para cada item, descreva o que precisa existir no seu próximo ambiente de trabalho.",
-          eixos: ["Ambiente", "Tipo de atividade", "Nível de autonomia", "Relação com resultado", "Rotina"]
+          eixos: ["Ambiente", "Tipo de atividade", "Nível de autonomia", "Retornos esperados", "Rotina"]
         }
       ]
     },
