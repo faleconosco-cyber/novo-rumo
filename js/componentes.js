@@ -83,9 +83,9 @@ function construirResumoApoio(ids) {
       // Título da experiência
       paragrafos.push({ texto: "Na experiência \"" + nome + "\":", forte: true });
       // Um parágrafo por aspecto
-      if (limpar(exp.p0)) paragrafos.push({ texto: "O aprendizado foi: " + converterVoz(limpar(exp.p0)) + "." });
-      if (limpar(exp.p1)) paragrafos.push({ texto: "O que te fez ficar foi: " + converterVoz(limpar(exp.p1)) + "." });
-      if (limpar(exp.p2)) paragrafos.push({ texto: "O que te fez sair foi: " + converterVoz(limpar(exp.p2)) + "." });
+      if (limpar(exp.p0)) paragrafos.push({ rotulo: "O aprendizado foi:", texto: converterVoz(limpar(exp.p0)) + "." });
+      if (limpar(exp.p1)) paragrafos.push({ rotulo: "O que te fez ficar foi:", texto: converterVoz(limpar(exp.p1)) + "." });
+      if (limpar(exp.p2)) paragrafos.push({ rotulo: "O que te fez sair foi:", texto: converterVoz(limpar(exp.p2)) + "." });
       // Pilares dessa experiência
       const p = (pil.porExperiencia && pil.porExperiencia[nome]) || {};
       const fp = ["competencia", "reconhecimento", "sentido"].map(c => frasePilar(c, p[c])).filter(Boolean);
@@ -229,10 +229,16 @@ function renderizarModulo(modulo, valor, aoMudar) {
       if (paragrafos.length) {
         const apoio = el("div", { class: "card", style: "background:#e9efe6;" });
         apoio.appendChild(el("h3", { text: "Um resumo do que você trouxe até aqui:" }));
-        paragrafos.forEach(p => apoio.appendChild(el("p", {
-          text: p.texto,
-          style: p.forte ? "font-weight:700; margin:14px 0 4px;" : "margin-bottom:8px;"
-        })));
+        paragrafos.forEach(p => {
+          const par = el("p", { style: p.forte ? "font-weight:700; margin:14px 0 4px;" : "margin-bottom:8px;" });
+          if (p.rotulo) {
+            par.appendChild(el("strong", { text: p.rotulo + " " }));
+            par.appendChild(document.createTextNode(p.texto));
+          } else {
+            par.textContent = p.texto;
+          }
+          apoio.appendChild(par);
+        });
         card.appendChild(apoio);
       }
       if (modulo.campo) {
