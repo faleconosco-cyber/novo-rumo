@@ -79,29 +79,26 @@ function construirResumoApoio(ids) {
 
   if (ids.includes("e1_linha_tempo") && exps.length) {
     exps.forEach((exp, idx) => {
-      const nome = exp.nome && exp.nome.trim() ? exp.nome.trim() : ("a experiência " + (idx + 1));
-      let frase = "Na experiência \"" + nome + "\", ";
-      const partes = [];
-      if (limpar(exp.p0)) partes.push("o aprendizado foi: " + converterVoz(limpar(exp.p0)));
-      if (limpar(exp.p1)) partes.push("o que te fez ficar: " + converterVoz(limpar(exp.p1)));
-      if (limpar(exp.p2)) partes.push("o que te fez sair: " + converterVoz(limpar(exp.p2)));
-      frase += partes.join("; ") + ".";
-
-      // Costura os pilares dessa experiência.
-      const chaveExp = exp.nome && exp.nome.trim() ? exp.nome.trim() : ("Experiência " + (idx + 1));
-      const p = (pil.porExperiencia && pil.porExperiencia[chaveExp]) || {};
+      const nome = exp.nome && exp.nome.trim() ? exp.nome.trim() : ("Experiência " + (idx + 1));
+      // Título da experiência
+      paragrafos.push({ texto: "Na experiência \"" + nome + "\":", forte: true });
+      // Um parágrafo por aspecto
+      if (limpar(exp.p0)) paragrafos.push({ texto: "O aprendizado foi: " + converterVoz(limpar(exp.p0)) + "." });
+      if (limpar(exp.p1)) paragrafos.push({ texto: "O que te fez ficar foi: " + converterVoz(limpar(exp.p1)) + "." });
+      if (limpar(exp.p2)) paragrafos.push({ texto: "O que te fez sair foi: " + converterVoz(limpar(exp.p2)) + "." });
+      // Pilares dessa experiência
+      const p = (pil.porExperiencia && pil.porExperiencia[nome]) || {};
       const fp = ["competencia", "reconhecimento", "sentido"].map(c => frasePilar(c, p[c])).filter(Boolean);
       if (fp.length) {
-        frase += " Nessa fase, você " + (fp.length > 1 ? fp.slice(0, -1).join(", ") + " e " + fp[fp.length - 1] : fp[0]) + ".";
+        paragrafos.push({ texto: "Nessa fase, você " + (fp.length > 1 ? fp.slice(0, -1).join(", ") + " e " + fp[fp.length - 1] : fp[0]) + "." });
       }
-      paragrafos.push(frase);
     });
   }
 
   if (ids.includes("e1_habilidades")) {
     const hab = Armazenamento.lerResposta("e1_habilidades") || {};
     const texto = limpar(hab.p0);
-    if (texto) paragrafos.push("Entre suas habilidades, você reconhece: " + converterVoz(texto) + ".");
+    if (texto) paragrafos.push({ texto: "Entre suas habilidades, você reconhece: " + converterVoz(texto) + "." });
   }
 
   return paragrafos;
@@ -232,7 +229,10 @@ function renderizarModulo(modulo, valor, aoMudar) {
       if (paragrafos.length) {
         const apoio = el("div", { class: "card", style: "background:#e9efe6;" });
         apoio.appendChild(el("h3", { text: "Um resumo do que você trouxe até aqui:" }));
-        paragrafos.forEach(p => apoio.appendChild(el("p", { text: p, style: "margin-bottom:12px;" })));
+        paragrafos.forEach(p => apoio.appendChild(el("p", {
+          text: p.texto,
+          style: p.forte ? "font-weight:700; margin:14px 0 4px;" : "margin-bottom:8px;"
+        })));
         card.appendChild(apoio);
       }
       if (modulo.campo) {
