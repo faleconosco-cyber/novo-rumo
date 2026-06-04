@@ -270,7 +270,10 @@ const CONTEUDO = {
           tipo: "texto",
           titulo: "Em segundo plano",
           instrucao: "Uma decisão tomada com antecedência tira o peso do medo de errar e transforma a mudança numa aposta consciente.",
-          perguntas: ["Se em quantos meses, e o quê? — 'Se em ___ meses isso não estiver funcionando, eu vou...'"]
+          perguntas: [
+            "Daqui a quantos meses você vai reavaliar se esse caminho está funcionando?",
+            "Se nesse prazo não estiver funcionando, o que você vai fazer?"
+          ]
         }
       ]
     }
