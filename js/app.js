@@ -59,6 +59,11 @@
     const ultimo = (prog.etapa === 4 && prog.modulo === etapaAtual().modulos.length - 1);
     botao.textContent = ultimo ? "Concluir" : "Continuar";
 
+    // Botão Voltar: escondido no primeiro módulo da primeira etapa
+    const voltar = document.getElementById("voltar");
+    const noComeco = (prog.etapa === 1 && prog.modulo === 0);
+    voltar.style.visibility = noComeco ? "hidden" : "visible";
+
     atualizarBarra();
     window.scrollTo(0, 0);
   }
@@ -75,6 +80,19 @@
     desenhar();
   }
 
+  function voltar() {
+    if (prog.etapa === 1 && prog.modulo === 0) return; // já está no começo
+    if (prog.modulo > 0) {
+      prog.modulo -= 1;
+    } else {
+      prog.etapa -= 1;
+      prog.modulo = etapas[prog.etapa - 1].modulos.length - 1;
+    }
+    Armazenamento.salvarProgresso(prog.etapa, prog.modulo);
+    desenhar();
+  }
+
   document.getElementById("continuar").addEventListener("click", avancar);
+  document.getElementById("voltar").addEventListener("click", voltar);
   desenhar();
 })();
