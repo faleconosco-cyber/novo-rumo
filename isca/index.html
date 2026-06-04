@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Estou na profissão certa? · Checklist Novo Rumo</title>
+  <style>
+    :root{
+      --verde-profundo:#3B503F; --verde-agua:#91B096; --bege:#EFE7D6; --bege-escuro:#DED2BB;
+      --preto-suave:#282828; --branco:#fff; --raio:14px; --sombra:0 2px 12px rgba(59,80,63,.12);
+    }
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Montserrat',Arial,sans-serif;background:var(--bege);color:var(--preto-suave);line-height:1.6}
+    .container{max-width:720px;margin:0 auto;padding:28px 20px 80px}
+    h1{color:var(--verde-profundo);font-size:1.9rem;font-weight:800;line-height:1.2;margin-bottom:10px}
+    h2{color:var(--verde-profundo);font-size:1.25rem;font-weight:800;margin:6px 0}
+    p{margin-bottom:12px}
+    .lead{color:var(--verde-profundo);font-weight:600}
+    .card{background:var(--branco);border-radius:var(--raio);padding:22px 24px;box-shadow:var(--sombra);margin-bottom:18px}
+    .bloco-titulo{font-size:.82rem;text-transform:uppercase;letter-spacing:.5px;color:var(--verde-agua);font-weight:700;margin-bottom:6px}
+    .item{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--bege-escuro);cursor:pointer}
+    .item:last-child{border-bottom:none}
+    .item .marca{flex:0 0 26px;height:26px;border:2px solid var(--verde-agua);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--branco);background:var(--branco);transition:.15s}
+    .item.marcado .marca{background:var(--verde-profundo);border-color:var(--verde-profundo)}
+    .item .texto{flex:1}
+    .resultado{background:var(--verde-profundo);color:var(--branco);border-radius:var(--raio);padding:24px;margin-top:8px}
+    .resultado h2{color:var(--branco)}
+    .contador{font-size:2.4rem;font-weight:800}
+    .btn{display:inline-block;background:var(--verde-profundo);color:var(--branco);text-decoration:none;border-radius:var(--raio);
+      padding:15px 30px;font-weight:700;font-size:1.05rem;border:none;cursor:pointer;margin-top:10px}
+    .btn.claro{background:var(--branco);color:var(--verde-profundo)}
+    .rodape{text-align:center;color:var(--verde-profundo);font-size:.85rem;margin-top:24px}
+    @media print{ .btn{display:none} body{background:#fff} .card{box-shadow:none;border:1px solid #ccc} }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <header style="text-align:center;margin-bottom:18px">
+      <p class="bloco-titulo">Instituto Rumo · Novo Rumo</p>
+      <h1>Estou na profissão certa?</h1>
+      <p class="lead">Um checklist honesto, em 5 minutos, para entender o que o seu desconforto está tentando te dizer.</p>
+    </header>
+
+    <div class="card">
+      <p>Sentir que algo precisa mudar na carreira não é fraqueza, nem capricho. Quase sempre é um sinal de que alguma necessidade importante deixou de ser atendida. Marque abaixo o que for verdade para você hoje. No final, você recebe uma leitura do seu momento.</p>
+    </div>
+
+    <div class="card">
+      <p class="bloco-titulo">Bloco 1 — Sinais do dia a dia</p>
+      <h2>Como você tem se sentido no trabalho</h2>
+      <div id="bloco1"></div>
+    </div>
+
+    <div class="card">
+      <p class="bloco-titulo">Bloco 2 — O que sustenta você</p>
+      <h2>Os três pilares de quem permanece com sentido</h2>
+      <p style="font-size:.92rem">Pessoas costumam permanecer onde sentem três coisas ao mesmo tempo: que são capazes, que são reconhecidas e que aquilo importa. Marque os que <strong>faltam</strong> hoje.</p>
+      <div id="bloco2"></div>
+    </div>
+
+    <div class="card">
+      <p class="bloco-titulo">Bloco 3 — O que você já sabe sobre si</p>
+      <h2>Pistas que a sua história já deu</h2>
+      <div id="bloco3"></div>
+    </div>
+
+    <div class="resultado" id="resultado">
+      <p class="bloco-titulo" style="color:var(--verde-agua)">Sua leitura</p>
+      <h2 id="res-titulo">Marque os itens acima para ver sua leitura</h2>
+      <p id="res-texto">Conforme você marca, esta caixa se atualiza com uma leitura do seu momento.</p>
+      <p><span class="contador" id="contador">0</span> <span style="opacity:.85">de <span id="total">0</span> sinais marcados</span></p>
+    </div>
+
+    <div class="card" style="text-align:center;margin-top:18px">
+      <h2>Quer transformar esses sinais em um plano?</h2>
+      <p>O <strong>Novo Rumo</strong> é um processo digital guiado, feito a partir da sua própria história, que te leva de "algo precisa mudar" até um próximo passo concreto, em quatro etapas: Reconhecer, Ultrapassar, Mapear e Organizar.</p>
+      <a class="btn" id="cta" href="#" target="_blank">Quero conhecer o Novo Rumo</a>
+    </div>
+
+    <p class="rodape">Instituto Rumo · Orientação Profissional</p>
+  </div>
+
+  <script>
+    // EDITÁVEL: troque o link abaixo pelo link de venda na Eduzz, ou pelo WhatsApp.
+    var LINK_NOVO_RUMO = "https://wa.me/55XXXXXXXXXXX?text=" + encodeURIComponent("Olá! Fiz o checklist e quero conhecer o Novo Rumo.");
+
+    var BLOCO1 = [
+      "Penso em mudar de trabalho ou de área com frequência.",
+      "A segunda-feira pesa mais do que deveria.",
+      "Já não aprendo nada de novo há bastante tempo.",
+      "Sinto que poderia estar fazendo algo mais alinhado comigo.",
+      "Falta entusiasmo, mesmo quando as coisas dão certo.",
+      "Tenho boas habilidades, mas não as uso no que faço hoje.",
+      "Evito pensar no assunto porque dá angústia ou cansaço."
+    ];
+    var BLOCO2 = [
+      "Não me sinto capaz ou preparado para o que faço (competência).",
+      "Não me sinto reconhecido ou valorizado pelo que entrego (reconhecimento).",
+      "Não entendo mais por que aquilo que faço importa (sentido)."
+    ];
+    var BLOCO3 = [
+      "Quando olho minha trajetória, percebo um padrão se repetindo.",
+      "Sei o que me faz ficar num trabalho, mas raramente respeito isso na hora de escolher.",
+      "Tenho interesses que nunca couberam numa única profissão.",
+      "O dinheiro pesa nas minhas escolhas, e nem sempre de forma consciente.",
+      "Sinto que sei mais do que costumo reconhecer em mim."
+    ];
+
+    function montar(idLista, itens){
+      var alvo = document.getElementById(idLista);
+      itens.forEach(function(txt){
+        var div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = '<div class="marca">✓</div><div class="texto">'+txt+'</div>';
+        div.querySelector('.marca').style.color = 'transparent';
+        div.addEventListener('click', function(){
+          div.classList.toggle('marcado');
+          div.querySelector('.marca').style.color = div.classList.contains('marcado') ? '#fff' : 'transparent';
+          atualizar();
+        });
+        alvo.appendChild(div);
+      });
+    }
+
+    function atualizar(){
+      var marcados = document.querySelectorAll('.item.marcado').length;
+      var total = document.querySelectorAll('.item').length;
+      document.getElementById('contador').textContent = marcados;
+      document.getElementById('total').textContent = total;
+      var t = document.getElementById('res-titulo');
+      var p = document.getElementById('res-texto');
+      if(marcados === 0){
+        t.textContent = "Marque os itens acima para ver sua leitura";
+        p.textContent = "Conforme você marca, esta caixa se atualiza com uma leitura do seu momento.";
+      } else if(marcados <= 3){
+        t.textContent = "Alguns sinais, nada fora do comum";
+        p.textContent = "Você sente incômodos pontuais. Vale observar o que se repete antes que vire desgaste. Conhecer seus padrões agora evita decisões no impulso depois.";
+      } else if(marcados <= 7){
+        t.textContent = "Há um recado importante aqui";
+        p.textContent = "Vários sinais apontam para a mesma direção: alguma necessidade sua não está sendo atendida. Esse é o momento certo para entender o que sustenta você e organizar um próximo passo, com calma e método.";
+      } else {
+        t.textContent = "O seu desconforto já está pedindo movimento";
+        p.textContent = "São muitos sinais ao mesmo tempo. Isso não significa recomeçar do zero, e sim olhar sua história com clareza para escolher um caminho que faça sentido. Um processo guiado faz toda a diferença nessa hora.";
+      }
+    }
+
+    montar('bloco1', BLOCO1);
+    montar('bloco2', BLOCO2);
+    montar('bloco3', BLOCO3);
+    atualizar();
+    document.getElementById('cta').href = LINK_NOVO_RUMO;
+  </script>
+</body>
+</html>
