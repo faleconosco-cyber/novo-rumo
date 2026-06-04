@@ -39,6 +39,56 @@ function respostaLegivel(valor) {
   return String(valor);
 }
 
+// Limpa um pedaço de texto do usuário (tira pontuação final solta).
+function limpar(t) { return (t || "").trim().replace(/[.;,]+$/, ""); }
+
+// Frases para cada pilar conforme o nível escolhido.
+function frasePilar(chave, nivel) {
+  const m = {
+    competencia: { "Tinha": "se sentia preparado", "Em parte": "se sentia preparado em parte", "Faltou": "não se sentia preparado" },
+    reconhecimento: { "Tinha": "era reconhecido", "Em parte": "era reconhecido em parte", "Faltou": "faltou reconhecimento" },
+    sentido: { "Tinha": "via sentido no que fazia", "Em parte": "via sentido em parte", "Faltou": "faltava sentido" }
+  };
+  return (m[chave] && m[chave][nivel]) || null;
+}
+
+// Monta um resumo em prosa, costurando linha do tempo + pilares (e habilidades, se houver).
+function construirResumoApoio(ids) {
+  const paragrafos = [];
+  const lt = Armazenamento.lerResposta("e1_linha_tempo") || {};
+  const pil = Armazenamento.lerResposta("e1_pilares") || {};
+  const exps = (lt.experiencias || []).filter(e => e && (e.nome || e.p0 || e.p1 || e.p2));
+
+  if (ids.includes("e1_linha_tempo") && exps.length) {
+    exps.forEach((exp, idx) => {
+      const nome = exp.nome && exp.nome.trim() ? exp.nome.trim() : ("a experiência " + (idx + 1));
+      let frase = "Na experiência \"" + nome + "\", ";
+      const partes = [];
+      if (limpar(exp.p0)) partes.push("o aprendizado foi: " + limpar(exp.p0));
+      if (limpar(exp.p1)) partes.push("o que te fez ficar: " + limpar(exp.p1));
+      if (limpar(exp.p2)) partes.push("o que te fez sair: " + limpar(exp.p2));
+      frase += partes.join("; ") + ".";
+
+      // Costura os pilares dessa experiência.
+      const chaveExp = exp.nome && exp.nome.trim() ? exp.nome.trim() : ("Experiência " + (idx + 1));
+      const p = (pil.porExperiencia && pil.porExperiencia[chaveExp]) || {};
+      const fp = ["competencia", "reconhecimento", "sentido"].map(c => frasePilar(c, p[c])).filter(Boolean);
+      if (fp.length) {
+        frase += " Nessa fase, você " + (fp.length > 1 ? fp.slice(0, -1).join(", ") + " e " + fp[fp.length - 1] : fp[0]) + ".";
+      }
+      paragrafos.push(frase);
+    });
+  }
+
+  if (ids.includes("e1_habilidades")) {
+    const hab = Armazenamento.lerResposta("e1_habilidades") || {};
+    const texto = limpar(hab.p0);
+    if (texto) paragrafos.push("Entre suas habilidades, você reconhece: " + texto + ".");
+  }
+
+  return paragrafos;
+}
+
 function cabecalho(modulo) {
   const frag = document.createDocumentFragment();
   frag.appendChild(el("h2", { text: modulo.titulo }));
@@ -160,16 +210,11 @@ function renderizarModulo(modulo, valor, aoMudar) {
     },
     sintese: () => {
       // Mostra respostas anteriores como apoio (somente leitura), em texto legível.
-      const itens = (modulo.puxar_de || [])
-        .map(id => ({ titulo: tituloDoModulo(id), texto: respostaLegivel(Armazenamento.lerResposta(id)).trim() }))
-        .filter(x => x.texto);
-      if (itens.length) {
+      const paragrafos = construirResumoApoio(modulo.puxar_de || []);
+      if (paragrafos.length) {
         const apoio = el("div", { class: "card", style: "background:#e9efe6;" });
-        apoio.appendChild(el("h3", { text: "Para te ajudar, o que você já trouxe:" }));
-        itens.forEach(x => {
-          apoio.appendChild(el("p", { text: x.titulo, style: "font-weight:700; margin-bottom:2px;" }));
-          apoio.appendChild(el("p", { text: x.texto, style: "white-space:pre-wrap; margin-bottom:14px;" }));
-        });
+        apoio.appendChild(el("h3", { text: "Um resumo do que você trouxe até aqui:" }));
+        paragrafos.forEach(p => apoio.appendChild(el("p", { text: p, style: "margin-bottom:12px;" })));
         card.appendChild(apoio);
       }
       if (modulo.campo) {
