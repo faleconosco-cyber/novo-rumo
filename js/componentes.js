@@ -42,6 +42,24 @@ function respostaLegivel(valor) {
 // Limpa um pedaço de texto do usuário (tira pontuação final solta).
 function limpar(t) { return (t || "").trim().replace(/[.;,]+$/, ""); }
 
+// Converte trechos escritos em 1ª pessoa para a voz da devolutiva (você/seu).
+// Ex.: "me relacionar com pessoas... meu filho... meus princípios"
+//   -> "se relacionar com pessoas... seu filho... seus princípios"
+function converterVoz(t) {
+  if (!t) return t;
+  const trocas = [
+    [/\bme\b/gi, "se"],
+    [/\bmim\b/gi, "você"],
+    [/\bcomigo\b/gi, "consigo"],
+    [/\bmeu\b/gi, "seu"], [/\bmeus\b/gi, "seus"],
+    [/\bminha\b/gi, "sua"], [/\bminhas\b/gi, "suas"],
+    [/\beu\b/gi, "você"]
+  ];
+  let r = t;
+  trocas.forEach(([re, sub]) => { r = r.replace(re, sub); });
+  return r;
+}
+
 // Frases para cada pilar conforme o nível escolhido.
 function frasePilar(chave, nivel) {
   const m = {
@@ -64,9 +82,9 @@ function construirResumoApoio(ids) {
       const nome = exp.nome && exp.nome.trim() ? exp.nome.trim() : ("a experiência " + (idx + 1));
       let frase = "Na experiência \"" + nome + "\", ";
       const partes = [];
-      if (limpar(exp.p0)) partes.push("o aprendizado foi: " + limpar(exp.p0));
-      if (limpar(exp.p1)) partes.push("o que te fez ficar: " + limpar(exp.p1));
-      if (limpar(exp.p2)) partes.push("o que te fez sair: " + limpar(exp.p2));
+      if (limpar(exp.p0)) partes.push("o aprendizado foi: " + converterVoz(limpar(exp.p0)));
+      if (limpar(exp.p1)) partes.push("o que te fez ficar: " + converterVoz(limpar(exp.p1)));
+      if (limpar(exp.p2)) partes.push("o que te fez sair: " + converterVoz(limpar(exp.p2)));
       frase += partes.join("; ") + ".";
 
       // Costura os pilares dessa experiência.
@@ -83,7 +101,7 @@ function construirResumoApoio(ids) {
   if (ids.includes("e1_habilidades")) {
     const hab = Armazenamento.lerResposta("e1_habilidades") || {};
     const texto = limpar(hab.p0);
-    if (texto) paragrafos.push("Entre suas habilidades, você reconhece: " + texto + ".");
+    if (texto) paragrafos.push("Entre suas habilidades, você reconhece: " + converterVoz(texto) + ".");
   }
 
   return paragrafos;
