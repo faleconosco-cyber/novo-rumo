@@ -30,6 +30,9 @@ function respostaLegivel(valor) {
       if (k === "experiencias" && Array.isArray(v)) {
         return v.map((exp, i) => "Experiência " + (i + 1) + ": " + respostaLegivel(exp)).join("\n");
       }
+      if (k === "porExperiencia" && v && typeof v === "object") {
+        return Object.entries(v).map(([nome, pil]) => nome + ": " + respostaLegivel(pil)).join("\n");
+      }
       return respostaLegivel(v);
     }).filter(t => t && t.trim()).join("\n");
   }
@@ -121,21 +124,38 @@ function renderizarModulo(modulo, valor, aoMudar) {
       card.appendChild(add);
     },
     pilares: () => {
-      valor.pilares = valor.pilares || {};
-      modulo.pilares.forEach(pil => {
-        card.appendChild(el("label", { text: pil.rotulo }));
-        card.appendChild(el("p", { text: pil.ajuda, class: "salvo" }));
-        const chips = el("div", { class: "chips" });
-        modulo.niveis.forEach(nv => {
-          const c = el("span", { class: "chip", text: nv });
-          if (valor.pilares[pil.chave] === nv) c.classList.add("ativo");
-          c.addEventListener("click", () => {
-            chips.querySelectorAll(".chip").forEach(x => x.classList.remove("ativo"));
-            c.classList.add("ativo"); valor.pilares[pil.chave] = nv; aoMudar(valor);
+      // Avalia os 3 pilares para CADA experiência preenchida na linha do tempo.
+      valor.porExperiencia = valor.porExperiencia || {};
+      const lt = Armazenamento.lerResposta("e1_linha_tempo") || {};
+      const exps = (lt.experiencias || []).filter(e => e && (e.nome || e.p0 || e.p1 || e.p2));
+
+      if (!exps.length) {
+        card.appendChild(el("p", { class: "destaque",
+          text: "Para avaliar os pilares, primeiro adicione suas experiências no módulo \"Minha linha do tempo\"." }));
+        return;
+      }
+
+      exps.forEach((exp, idx) => {
+        const chaveExp = exp.nome && exp.nome.trim() ? exp.nome.trim() : ("Experiência " + (idx + 1));
+        valor.porExperiencia[chaveExp] = valor.porExperiencia[chaveExp] || {};
+        const bloco = el("div", { class: "card", style: "background:#f6f2e8;" });
+        bloco.appendChild(el("h3", { text: chaveExp }));
+        modulo.pilares.forEach(pil => {
+          bloco.appendChild(el("label", { text: pil.rotulo }));
+          bloco.appendChild(el("p", { text: pil.ajuda, class: "salvo" }));
+          const chips = el("div", { class: "chips" });
+          modulo.niveis.forEach(nv => {
+            const c = el("span", { class: "chip", text: nv });
+            if (valor.porExperiencia[chaveExp][pil.chave] === nv) c.classList.add("ativo");
+            c.addEventListener("click", () => {
+              chips.querySelectorAll(".chip").forEach(x => x.classList.remove("ativo"));
+              c.classList.add("ativo"); valor.porExperiencia[chaveExp][pil.chave] = nv; aoMudar(valor);
+            });
+            chips.appendChild(c);
           });
-          chips.appendChild(c);
+          bloco.appendChild(chips);
         });
-        card.appendChild(chips);
+        card.appendChild(bloco);
       });
     },
     sintese: () => {

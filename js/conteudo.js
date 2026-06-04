@@ -32,7 +32,7 @@ const CONTEUDO = {
           id: "e1_linha_tempo",
           tipo: "linha_tempo",
           titulo: "Minha linha do tempo",
-          instrucao: "Adicione cada experiência profissional que marcou sua trajetória. Para cada uma, responda as três perguntas. Pode adicionar quantas quiser.",
+          instrucao: "Adicione cada experiência profissional que marcou sua trajetória. Para cada uma, responda às três perguntas. Pode adicionar quantas quiser.",
           perguntas: ["O que eu aprendi ali?", "O que me fez ficar?", "O que me fez sair?"]
         },
         {
@@ -41,7 +41,7 @@ const CONTEUDO = {
           titulo: "Os 3 pilares",
           instrucao: "Pensando na sua trajetória, marque o quanto cada pilar esteve presente. Eles ajudam a entender o que sustenta você num trabalho.",
           pilares: [
-            { chave: "competencia", rotulo: "Competência percebida", ajuda: "Sentir que era boa ou estava preparada para o que fazia" },
+            { chave: "competencia", rotulo: "Competência percebida", ajuda: "Sentir que era bom ou estava preparado para o que fazia" },
             { chave: "reconhecimento", rotulo: "Reconhecimento", ajuda: "Sentir que o ambiente valorizava o que eu fazia" },
             { chave: "sentido", rotulo: "Sentido", ajuda: "Entender por que aquilo importava" }
           ],
@@ -210,7 +210,7 @@ const CONTEUDO = {
           id: "e4_aprender",
           tipo: "texto",
           titulo: "O que preciso aprender",
-          instrucao: "Sem lista de cursos. Seja cirúrgica.",
+          instrucao: "Sem lista de cursos. Seja cirúrgico.",
           perguntas: [
             "Dado o caminho que escolhi, qual é a lacuna mais urgente?",
             "Qual é o menor passo possível para começar a fechá-la?"
@@ -225,7 +225,7 @@ const CONTEUDO = {
           perguntas: [
             "O que aparece repetidamente na minha história profissional?",
             "O que as pessoas costumam me pedir ou reconhecer em mim?",
-            "Como você quer ser lembrada daqui a algum tempo?"
+            "Como você quer ser lembrado daqui a algum tempo?"
           ]
         },
         {
@@ -238,7 +238,7 @@ const CONTEUDO = {
         {
           id: "e4_compromissos",
           tipo: "texto",
-          titulo: "Compromissos comigo mesma",
+          titulo: "Compromissos comigo mesmo",
           instrucao: "Três respostas curtas que fecham o processo com intenção.",
           perguntas: [
             "O que vou sustentar?",
