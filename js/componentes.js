@@ -301,28 +301,54 @@ function renderizarModulo(modulo, valor, aoMudar) {
       card.appendChild(textarea(valor.b, v => { valor.b = v; aoMudar(valor); }));
     },
     orcamento: () => {
-      valor.linhas = valor.linhas || {};
-      const tbl = el("table", { class: "orcamento" });
-      const thead = el("tr", {}, [el("th", { text: "Item" }), el("th", { text: modulo.colunas[0] }), el("th", { text: modulo.colunas[1] })]);
-      tbl.appendChild(thead);
-      let totN = 0, totD = 0;
-      const totalCel = { n: null, d: null };
-      function recalc() {
-        totN = 0; totD = 0;
-        modulo.linhas.forEach(li => { const o = valor.linhas[li] || {}; totN += Number(o.n) || 0; totD += Number(o.d) || 0; });
-        totalCel.n.textContent = "R$ " + totN; totalCel.d.textContent = "R$ " + totD;
+      // Itens editáveis: a pessoa pode renomear, excluir e adicionar lacunas.
+      if (!Array.isArray(valor.itens)) {
+        valor.itens = (modulo.linhas || []).map(nome => ({ nome: nome, n: "", d: "" }));
       }
-      modulo.linhas.forEach(li => {
-        valor.linhas[li] = valor.linhas[li] || {};
-        const inpN = el("input", { type: "number", placeholder: "0" }); inpN.value = valor.linhas[li].n || "";
-        const inpD = el("input", { type: "number", placeholder: "0" }); inpD.value = valor.linhas[li].d || "";
-        inpN.addEventListener("input", () => { valor.linhas[li].n = inpN.value; aoMudar(valor); recalc(); });
-        inpD.addEventListener("input", () => { valor.linhas[li].d = inpD.value; aoMudar(valor); recalc(); });
-        tbl.appendChild(el("tr", {}, [el("td", { text: li }), el("td", {}, [inpN]), el("td", {}, [inpD])]));
-      });
-      totalCel.n = el("td", { text: "R$ 0" }); totalCel.d = el("td", { text: "R$ 0" });
-      tbl.appendChild(el("tr", {}, [el("td", { text: "TOTAL" }), totalCel.n, totalCel.d]));
-      card.appendChild(tbl); recalc();
+      const wrap = el("div", {});
+
+      function desenhar() {
+        wrap.innerHTML = "";
+        const tbl = el("table", { class: "orcamento" });
+        tbl.appendChild(el("tr", {}, [
+          el("th", { text: "Item" }),
+          el("th", { text: modulo.colunas[0] }),
+          el("th", { text: modulo.colunas[1] }),
+          el("th", { text: "" })
+        ]));
+
+        const totalCel = { n: el("td", { text: "R$ 0" }), d: el("td", { text: "R$ 0" }) };
+        function recalc() {
+          let totN = 0, totD = 0;
+          valor.itens.forEach(it => { totN += Number(it.n) || 0; totD += Number(it.d) || 0; });
+          totalCel.n.textContent = "R$ " + totN; totalCel.d.textContent = "R$ " + totD;
+        }
+
+        valor.itens.forEach((it, idx) => {
+          const inpNome = el("input", { type: "text", placeholder: "Nome do item" }); inpNome.value = it.nome || "";
+          inpNome.addEventListener("input", () => { it.nome = inpNome.value; aoMudar(valor); });
+          const inpN = el("input", { type: "number", placeholder: "0" }); inpN.value = it.n || "";
+          const inpD = el("input", { type: "number", placeholder: "0" }); inpD.value = it.d || "";
+          inpN.addEventListener("input", () => { it.n = inpN.value; aoMudar(valor); recalc(); });
+          inpD.addEventListener("input", () => { it.d = inpD.value; aoMudar(valor); recalc(); });
+          const btnX = el("button", { class: "btn-remover", text: "✕", title: "Excluir este item" });
+          btnX.addEventListener("click", () => { valor.itens.splice(idx, 1); aoMudar(valor); desenhar(); });
+          tbl.appendChild(el("tr", {}, [
+            el("td", {}, [inpNome]), el("td", {}, [inpN]), el("td", {}, [inpD]), el("td", {}, [btnX])
+          ]));
+        });
+
+        tbl.appendChild(el("tr", {}, [el("td", { text: "TOTAL" }), totalCel.n, totalCel.d, el("td", {})]));
+        wrap.appendChild(tbl);
+        recalc();
+
+        const add = el("button", { class: "btn", text: "+ Adicionar item", style: "margin-top:8px;" });
+        add.addEventListener("click", () => { valor.itens.push({ nome: "", n: "", d: "" }); aoMudar(valor); desenhar(); });
+        wrap.appendChild(add);
+      }
+
+      desenhar();
+      card.appendChild(wrap);
     },
     territorios: () => {
       valor.notas = valor.notas || {};

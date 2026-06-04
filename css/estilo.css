@@ -124,6 +124,11 @@ table.orcamento { width: 100%; border-collapse: collapse; margin: 12px 0; }
 table.orcamento th, table.orcamento td { padding: 8px; text-align: left; border-bottom: 1px solid var(--bege-escuro); }
 table.orcamento th { color: var(--verde-profundo); font-size: .85rem; text-transform: uppercase; }
 table.orcamento input { padding: 8px; }
+.btn-remover {
+  background: none; border: none; color: var(--bordo); font-size: 1.1rem;
+  cursor: pointer; padding: 4px 8px; line-height: 1;
+}
+.btn-remover:hover { color: var(--laranja); }
 
 /* Responsivo */
 @media (max-width: 600px) {
