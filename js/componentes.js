@@ -350,6 +350,47 @@ function renderizarModulo(modulo, valor, aoMudar) {
       desenhar();
       card.appendChild(wrap);
     },
+    oportunidades: () => {
+      valor.itens = Array.isArray(valor.itens) ? valor.itens : [{}];
+      const lista = el("div", {});
+      function desenhar() {
+        lista.innerHTML = "";
+        valor.itens.forEach((item, idx) => {
+          item.respostas = item.respostas || {};
+          const bloco = el("div", { class: "card", style: "background:#f6f2e8;" });
+          bloco.appendChild(el("label", { text: modulo.campoNome }));
+          const nome = el("input", { type: "text", placeholder: "Ex.: marketing digital, concurso, abrir um negócio..." });
+          nome.value = item.nome || "";
+          nome.addEventListener("input", () => { item.nome = nome.value; aoMudar(valor); });
+          bloco.appendChild(nome);
+          modulo.perguntas.forEach((p, i) => {
+            bloco.appendChild(el("label", { text: p }));
+            const chips = el("div", { class: "chips" });
+            modulo.niveis.forEach(nv => {
+              const c = el("span", { class: "chip", text: nv });
+              if (item.respostas["p" + i] === nv) c.classList.add("ativo");
+              c.addEventListener("click", () => {
+                chips.querySelectorAll(".chip").forEach(x => x.classList.remove("ativo"));
+                c.classList.add("ativo"); item.respostas["p" + i] = nv; aoMudar(valor);
+              });
+              chips.appendChild(c);
+            });
+            bloco.appendChild(chips);
+          });
+          if (valor.itens.length > 1) {
+            const rem = el("button", { class: "btn btn-secundario", text: "Remover", style: "margin-top:10px;" });
+            rem.addEventListener("click", () => { valor.itens.splice(idx, 1); aoMudar(valor); desenhar(); });
+            bloco.appendChild(rem);
+          }
+          lista.appendChild(bloco);
+        });
+      }
+      desenhar();
+      card.appendChild(lista);
+      const add = el("button", { class: "btn", text: "+ Adicionar oportunidade" });
+      add.addEventListener("click", () => { valor.itens.push({}); aoMudar(valor); desenhar(); });
+      card.appendChild(add);
+    },
     territorios: () => {
       valor.notas = valor.notas || {};
       modulo.territorios.forEach(t => {

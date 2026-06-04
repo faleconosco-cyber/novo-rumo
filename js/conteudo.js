@@ -183,10 +183,16 @@ const CONTEUDO = {
         },
         {
           id: "e3_aprofundar",
-          tipo: "texto",
+          tipo: "oportunidades",
           titulo: "O que vale aprofundar",
-          instrucao: "Liste as oportunidades que surgiram ao longo do processo e filtre: combinam com o que você descobriu sobre si? São viáveis financeiramente? Têm a ver com o que você já sabe fazer? Escolha no máximo três para investigar de verdade.",
-          perguntas: ["Quais são os caminhos que valem a pena investigar a fundo? (máximo 3)"]
+          instrucao: "Adicione as oportunidades ou caminhos que surgiram para você até aqui (por exemplo: um cargo, uma área, um negócio, um concurso). Para cada um, responda as três perguntas. No final, foque nos que tiverem mais \"Sim\".",
+          campoNome: "Oportunidade ou caminho",
+          perguntas: [
+            "Combina com o que descobri sobre mim?",
+            "É viável financeiramente agora?",
+            "Tem a ver com o que eu já sei fazer?"
+          ],
+          niveis: ["Sim", "Mais ou menos", "Não"]
         }
       ]
     },
