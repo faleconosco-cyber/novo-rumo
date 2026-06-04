@@ -116,7 +116,7 @@ const CONTEUDO = {
           id: "e2_trava",
           tipo: "duas_colunas",
           titulo: "O que me trava de verdade",
-          instrucao: "Preencha as duas colunas e compare. A diferença entre elas costuma revelar o obstáculo real.",
+          instrucao: "Preencha as duas lacunas e compare. A diferença entre elas costuma revelar o obstáculo real.",
           coluna_a: "O que me impede de verdade de mudar (o que eu imagino)",
           coluna_b: "O que tem evidência real de que pode acontecer (fatos reais, não sensações)"
         },
