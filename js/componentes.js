@@ -61,17 +61,26 @@ function converterVoz(t) {
 }
 
 // Frases para cada pilar conforme o nível escolhido.
-function frasePilar(chave, nivel) {
-  const m = {
+function frasePilar(chave, nivel, primeiraPersona) {
+  const m = primeiraPersona ? {
+    competencia: { "Tinha": "eu me sentia preparado", "Em parte": "eu me sentia preparado em parte", "Faltou": "eu não me sentia preparado" },
+    reconhecimento: { "Tinha": "eu era reconhecido", "Em parte": "eu era reconhecido em parte", "Faltou": "faltou reconhecimento" },
+    sentido: { "Tinha": "eu via sentido no que fazia", "Em parte": "eu via sentido em parte", "Faltou": "faltava sentido" },
+    retorno_financeiro: { "Tinha": "o retorno financeiro era satisfatório", "Em parte": "o retorno financeiro era parcial", "Faltou": "o retorno financeiro ficou abaixo do esperado" },
+    satisfacao_pessoal: { "Tinha": "eu gostava do que fazia", "Em parte": "eu gostava em parte do que fazia", "Faltou": "eu não gostava do que fazia" }
+  } : {
     competencia: { "Tinha": "se sentia preparado", "Em parte": "se sentia preparado em parte", "Faltou": "não se sentia preparado" },
     reconhecimento: { "Tinha": "era reconhecido", "Em parte": "era reconhecido em parte", "Faltou": "faltou reconhecimento" },
-    sentido: { "Tinha": "via sentido no que fazia", "Em parte": "via sentido em parte", "Faltou": "faltava sentido" }
+    sentido: { "Tinha": "via sentido no que fazia", "Em parte": "via sentido em parte", "Faltou": "faltava sentido" },
+    retorno_financeiro: { "Tinha": "o retorno financeiro era satisfatório", "Em parte": "o retorno financeiro era parcial", "Faltou": "o retorno financeiro ficou abaixo do esperado" },
+    satisfacao_pessoal: { "Tinha": "gostava do que fazia", "Em parte": "gostava em parte do que fazia", "Faltou": "não gostava do que fazia" }
   };
   return (m[chave] && m[chave][nivel]) || null;
 }
 
 // Monta um resumo em prosa, costurando linha do tempo + pilares (e habilidades, se houver).
-function construirResumoApoio(ids) {
+function construirResumoApoio(ids, voz) {
+  const primeiraPersona = voz === "primeira";
   const paragrafos = [];
   const lt = Armazenamento.lerResposta("e1_linha_tempo") || {};
   const pil = Armazenamento.lerResposta("e1_pilares") || {};
@@ -80,17 +89,16 @@ function construirResumoApoio(ids) {
   if (ids.includes("e1_linha_tempo") && exps.length) {
     exps.forEach((exp, idx) => {
       const nome = exp.nome && exp.nome.trim() ? exp.nome.trim() : ("Experiência " + (idx + 1));
-      // Título da experiência
       paragrafos.push({ texto: "Na experiência \"" + nome + "\":", forte: true });
-      // Um parágrafo por aspecto
-      if (limpar(exp.p0)) paragrafos.push({ rotulo: "O aprendizado foi:", texto: converterVoz(limpar(exp.p0)) + "." });
-      if (limpar(exp.p1)) paragrafos.push({ rotulo: "O que te fez ficar foi:", texto: converterVoz(limpar(exp.p1)) + "." });
-      if (limpar(exp.p2)) paragrafos.push({ rotulo: "O que te fez sair foi:", texto: converterVoz(limpar(exp.p2)) + "." });
-      // Pilares dessa experiência
+      const texto = primeiraPersona ? (t => t) : converterVoz;
+      if (limpar(exp.p0)) paragrafos.push({ rotulo: primeiraPersona ? "O que aprendi foi:" : "O aprendizado foi:", texto: texto(limpar(exp.p0)) + "." });
+      if (limpar(exp.p1)) paragrafos.push({ rotulo: primeiraPersona ? "O que me fez ficar foi:" : "O que te fez ficar foi:", texto: texto(limpar(exp.p1)) + "." });
+      if (limpar(exp.p2)) paragrafos.push({ rotulo: primeiraPersona ? "O que me fez sair foi:" : "O que te fez sair foi:", texto: texto(limpar(exp.p2)) + "." });
       const p = (pil.porExperiencia && pil.porExperiencia[nome]) || {};
-      const fp = ["competencia", "reconhecimento", "sentido"].map(c => frasePilar(c, p[c])).filter(Boolean);
+      const fp = ["competencia", "reconhecimento", "sentido", "retorno_financeiro", "satisfacao_pessoal"].map(c => frasePilar(c, p[c], primeiraPersona)).filter(Boolean);
       if (fp.length) {
-        paragrafos.push({ texto: "Nessa fase, você " + (fp.length > 1 ? fp.slice(0, -1).join(", ") + " e " + fp[fp.length - 1] : fp[0]) + "." });
+        const sujeito = primeiraPersona ? "Nessa fase, " : "Nessa fase, você ";
+        paragrafos.push({ texto: sujeito + (fp.length > 1 ? fp.slice(0, -1).join(", ") + " e " + fp[fp.length - 1] : fp[0]) + "." });
       }
     });
   }
@@ -98,7 +106,11 @@ function construirResumoApoio(ids) {
   if (ids.includes("e1_habilidades")) {
     const hab = Armazenamento.lerResposta("e1_habilidades") || {};
     const texto = limpar(hab.p0);
-    if (texto) paragrafos.push({ texto: "Entre suas habilidades, você reconhece: " + converterVoz(texto) + "." });
+    if (primeiraPersona) {
+      if (texto) paragrafos.push({ texto: "Entre as minhas habilidades, eu reconheço: " + texto + "." });
+    } else {
+      if (texto) paragrafos.push({ texto: "Entre suas habilidades, você reconhece: " + converterVoz(texto) + "." });
+    }
   }
 
   return paragrafos;
@@ -107,7 +119,10 @@ function construirResumoApoio(ids) {
 function cabecalho(modulo) {
   const frag = document.createDocumentFragment();
   frag.appendChild(el("h2", { text: modulo.titulo }));
-  if (modulo.instrucao) frag.appendChild(el("p", { text: modulo.instrucao }));
+  if (modulo.instrucao) {
+    const textos = Array.isArray(modulo.instrucao) ? modulo.instrucao : [modulo.instrucao];
+    textos.forEach(t => frag.appendChild(el("p", { text: t })));
+  }
   return frag;
 }
 
@@ -125,12 +140,30 @@ function renderizarModulo(modulo, valor, aoMudar) {
 
   const tipos = {
     texto: () => {
+      if (modulo.exemplos) card.appendChild(el("p", { class: "salvo", text: modulo.exemplos, style: "font-style:italic; margin-bottom:14px;" }));
       modulo.perguntas.forEach((p, i) => {
         card.appendChild(el("label", { text: p }));
         card.appendChild(textarea(valor["p" + i], v => { valor["p" + i] = v; aoMudar(valor); }));
       });
     },
     texto_com_apoio: () => {
+      // Resumo da linha do tempo como apoio, se solicitado
+      if (modulo.puxar_de && modulo.puxar_de.includes("e1_linha_tempo")) {
+        const lt = Armazenamento.lerResposta("e1_linha_tempo") || {};
+        const exps = (lt.experiencias || []).filter(e => e && (e.nome || e.p0));
+        if (exps.length) {
+          const apoio = el("div", { class: "card", style: "background:#e9efe6; margin-bottom:16px;" });
+          apoio.appendChild(el("h3", { text: "O que você trouxe na linha do tempo:" }));
+          exps.forEach((exp, idx) => {
+            const nome = exp.nome && exp.nome.trim() ? exp.nome.trim() : ("Experiência " + (idx + 1));
+            apoio.appendChild(el("p", { text: nome, style: "font-weight:700; margin:12px 0 4px;" }));
+            if (limpar(exp.p0)) apoio.appendChild(el("p", { text: "Aprendi: " + limpar(exp.p0), style: "margin-bottom:4px;" }));
+            if (limpar(exp.p1)) apoio.appendChild(el("p", { text: "O que me fez ficar: " + limpar(exp.p1), style: "margin-bottom:4px;" }));
+            if (limpar(exp.p2)) apoio.appendChild(el("p", { text: "O que me fez sair: " + limpar(exp.p2), style: "margin-bottom:4px;" }));
+          });
+          card.appendChild(apoio);
+        }
+      }
       // Só o primeiro campo (p0) recebe os chips clicáveis de apoio.
       const ta = textarea(valor.p0, v => { valor.p0 = v; aoMudar(valor); });
       modulo.perguntas.forEach((p, i) => {
@@ -188,10 +221,44 @@ function renderizarModulo(modulo, valor, aoMudar) {
         valor.experiencias.forEach((exp, idx) => {
           const bloco = el("div", { class: "card", style: "background:#f6f2e8;" });
           bloco.appendChild(el("h3", { text: "Experiência " + (idx + 1) }));
-          const nome = el("input", { type: "text", placeholder: "Nome/área dessa experiência" });
+
+          // Nome/área
+          const nome = el("input", { type: "text", placeholder: "Nome ou área dessa experiência" });
           nome.value = exp.nome || "";
           nome.addEventListener("input", () => { exp.nome = nome.value; aoMudar(valor); });
+          bloco.appendChild(el("label", { text: "Nome ou área" }));
           bloco.appendChild(nome);
+
+          // Função/cargo
+          bloco.appendChild(el("label", { text: "Função ou cargo" }));
+          const cargo = el("input", { type: "text", placeholder: "Ex.: analista, coordenadora, professora..." });
+          cargo.value = exp.cargo || "";
+          cargo.addEventListener("input", () => { exp.cargo = cargo.value; aoMudar(valor); });
+          bloco.appendChild(cargo);
+
+          // Datas lado a lado
+          const datas = el("div", { style: "display:flex; gap:12px; margin-top:4px;" });
+          const wEntrada = el("div", { style: "flex:1;" });
+          wEntrada.appendChild(el("label", { text: "Data de entrada" }));
+          const entrada = el("input", { type: "text", placeholder: "Ex.: 2018" });
+          entrada.value = exp.entrada || "";
+          entrada.addEventListener("input", () => { exp.entrada = entrada.value; aoMudar(valor); });
+          wEntrada.appendChild(entrada);
+          const wSaida = el("div", { style: "flex:1;" });
+          wSaida.appendChild(el("label", { text: "Data de saída (ou deixe em branco)" }));
+          const saida = el("input", { type: "text", placeholder: "Ex.: 2022 (ou em branco se ainda está aqui)" });
+          saida.value = exp.saida || "";
+          saida.addEventListener("input", () => { exp.saida = saida.value; aoMudar(valor); });
+          wSaida.appendChild(saida);
+          datas.appendChild(wEntrada);
+          datas.appendChild(wSaida);
+          bloco.appendChild(datas);
+
+          // O que fazia no dia a dia
+          bloco.appendChild(el("label", { text: "O que eu fazia no dia a dia" }));
+          bloco.appendChild(textarea(exp.atividades, v => { exp.atividades = v; aoMudar(valor); }, "Descreva brevemente suas principais atividades..."));
+
+          // Perguntas reflexivas originais
           modulo.perguntas.forEach((p, i) => {
             bloco.appendChild(el("label", { text: p }));
             bloco.appendChild(textarea(exp["p" + i], v => { exp["p" + i] = v; aoMudar(valor); }));
@@ -209,43 +276,27 @@ function renderizarModulo(modulo, valor, aoMudar) {
       card.appendChild(add);
     },
     pilares: () => {
-      // Avalia os 3 pilares para CADA experiência preenchida na linha do tempo.
-      valor.porExperiencia = valor.porExperiencia || {};
-      const lt = Armazenamento.lerResposta("e1_linha_tempo") || {};
-      const exps = (lt.experiencias || []).filter(e => e && (e.nome || e.p0 || e.p1 || e.p2));
-
-      if (!exps.length) {
-        card.appendChild(el("p", { class: "destaque",
-          text: "Para avaliar os pilares, primeiro adicione suas experiências no módulo \"Minha linha do tempo\"." }));
-        return;
-      }
-
-      exps.forEach((exp, idx) => {
-        const chaveExp = exp.nome && exp.nome.trim() ? exp.nome.trim() : ("Experiência " + (idx + 1));
-        valor.porExperiencia[chaveExp] = valor.porExperiencia[chaveExp] || {};
-        const bloco = el("div", { class: "card", style: "background:#f6f2e8;" });
-        bloco.appendChild(el("h3", { text: chaveExp }));
-        modulo.pilares.forEach(pil => {
-          bloco.appendChild(el("label", { text: pil.rotulo }));
-          bloco.appendChild(el("p", { text: pil.ajuda, class: "salvo" }));
-          const chips = el("div", { class: "chips" });
-          modulo.niveis.forEach(nv => {
-            const c = el("span", { class: "chip", text: nv });
-            if (valor.porExperiencia[chaveExp][pil.chave] === nv) c.classList.add("ativo");
-            c.addEventListener("click", () => {
-              chips.querySelectorAll(".chip").forEach(x => x.classList.remove("ativo"));
-              c.classList.add("ativo"); valor.porExperiencia[chaveExp][pil.chave] = nv; aoMudar(valor);
-            });
-            chips.appendChild(c);
+      // Avalia a importância de cada pilar para a pessoa (independente da linha do tempo).
+      valor.importancia = valor.importancia || {};
+      modulo.pilares.forEach(pil => {
+        card.appendChild(el("label", { text: pil.rotulo }));
+        card.appendChild(el("p", { text: pil.ajuda, class: "salvo" }));
+        const chips = el("div", { class: "chips" });
+        modulo.niveis.forEach(nv => {
+          const c = el("span", { class: "chip", text: nv });
+          if (valor.importancia[pil.chave] === nv) c.classList.add("ativo");
+          c.addEventListener("click", () => {
+            chips.querySelectorAll(".chip").forEach(x => x.classList.remove("ativo"));
+            c.classList.add("ativo"); valor.importancia[pil.chave] = nv; aoMudar(valor);
           });
-          bloco.appendChild(chips);
+          chips.appendChild(c);
         });
-        card.appendChild(bloco);
+        card.appendChild(chips);
       });
     },
     sintese: () => {
       // Mostra respostas anteriores como apoio (somente leitura), em texto legível.
-      const paragrafos = construirResumoApoio(modulo.puxar_de || []);
+      const paragrafos = construirResumoApoio(modulo.puxar_de || [], modulo.voz);
       if (paragrafos.length) {
         const apoio = el("div", { class: "card", style: "background:#e9efe6;" });
         apoio.appendChild(el("h3", { text: "Um resumo do que você trouxe até aqui:" }));
@@ -273,8 +324,33 @@ function renderizarModulo(modulo, valor, aoMudar) {
     eixos: () => {
       valor.eixos = valor.eixos || {};
       modulo.eixos.forEach(ex => {
-        card.appendChild(el("label", { text: ex }));
-        card.appendChild(textarea(valor.eixos[ex], v => { valor.eixos[ex] = v; aoMudar(valor); }));
+        const rotulo = ex.rotulo || ex;
+        const exemplos = ex.exemplos || [];
+        card.appendChild(el("label", { text: rotulo }));
+        const ta = textarea(valor.eixos[rotulo], v => { valor.eixos[rotulo] = v; aoMudar(valor); });
+        card.appendChild(ta);
+        if (exemplos.length) {
+          const det = el("details", {});
+          det.appendChild(el("summary", { text: "Sugestões (clique para ver)", style: "font-size:.88rem; color:var(--verde-agua); cursor:pointer; margin:6px 0;" }));
+          det.appendChild(el("p", { class: "salvo", text: "Clique para adicionar à sua resposta." }));
+          const chips = el("div", { class: "chips" });
+          exemplos.forEach(it => {
+            const c = el("span", { class: "chip", text: it });
+            c.addEventListener("click", () => {
+              const atual = ta.value.trim();
+              const jaTem = atual.toLowerCase().split(/[,;\n]+/).map(s => s.trim()).includes(it.toLowerCase());
+              if (!jaTem) {
+                ta.value = atual ? atual + ", " + it : it;
+                valor.eixos[rotulo] = ta.value;
+                aoMudar(valor);
+              }
+              c.classList.toggle("ativo");
+            });
+            chips.appendChild(c);
+          });
+          det.appendChild(chips);
+          card.appendChild(det);
+        }
       });
     },
     selecao_e_texto: () => {
@@ -417,7 +493,7 @@ function renderizarModulo(modulo, valor, aoMudar) {
       modulo.territorios.forEach(t => {
         card.appendChild(el("label", { text: t.rotulo }));
         card.appendChild(el("p", { text: t.ajuda, class: "salvo" }));
-        card.appendChild(textarea(valor.notas[t.rotulo], v => { valor.notas[t.rotulo] = v; aoMudar(valor); }, "Esse território faz sentido pra mim? Por quê?"));
+        card.appendChild(textarea(valor.notas[t.rotulo], v => { valor.notas[t.rotulo] = v; aoMudar(valor); }, "Esse cenário faz sentido pra mim? Por quê?"));
       });
     },
     caminhos: () => {

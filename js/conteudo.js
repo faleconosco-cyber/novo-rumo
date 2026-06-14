@@ -32,20 +32,22 @@ const CONTEUDO = {
           id: "e1_linha_tempo",
           tipo: "linha_tempo",
           titulo: "Minha linha do tempo",
-          instrucao: "Adicione cada experiência profissional que marcou sua trajetória. Para cada uma, responda às três perguntas. Pode adicionar quantas quiser.",
-          perguntas: ["O que eu aprendi ali?", "O que me fez ficar?", "O que me fez sair?"]
+          instrucao: "Adicione cada experiência profissional que marcou sua trajetória — incluindo o emprego atual. Para cada uma, responda às perguntas. Pode adicionar quantas quiser.",
+          perguntas: ["O que eu aprendi ali?", "O que me fez/faz ficar?", "O que me fez/faria sair?"]
         },
         {
           id: "e1_pilares",
           tipo: "pilares",
-          titulo: "Os 3 pilares",
-          instrucao: "Pensando na sua trajetória, marque o quanto cada pilar esteve presente. Eles ajudam a entender o que sustenta você num trabalho.",
+          titulo: "Os pilares",
+          instrucao: "Marque o quanto cada pilar é importante para você — não o que você teve, mas o que faz sentido de verdade na sua vida. Eles revelam o que precisa existir no trabalho para você se sentir bem.",
           pilares: [
             { chave: "competencia", rotulo: "Competência percebida", ajuda: "Sentir que era bom ou estava preparado para o que fazia" },
             { chave: "reconhecimento", rotulo: "Reconhecimento", ajuda: "Sentir que o ambiente valorizava o que eu fazia" },
-            { chave: "sentido", rotulo: "Sentido", ajuda: "Entender por que aquilo importava" }
+            { chave: "sentido", rotulo: "Sentido", ajuda: "Entender por que aquilo importava" },
+            { chave: "retorno_financeiro", rotulo: "Retorno financeiro", ajuda: "O quanto o trabalho me remunerava de forma justa ou suficiente" },
+            { chave: "satisfacao_pessoal", rotulo: "Satisfação pessoal", ajuda: "Gostar do que fazia, sentir prazer no dia a dia do trabalho" }
           ],
-          niveis: ["Faltou", "Em parte", "Tinha"]
+          niveis: ["Pouco importante", "Importante", "Essencial"]
         },
         {
           id: "e1_engajamento",
@@ -53,14 +55,23 @@ const CONTEUDO = {
           titulo: "Minha fórmula de engajamento",
           instrucao: "Olhando para tudo que você trouxe até aqui, complete a frase com o que a sua história prova — não com o que você acha que deveria querer.",
           puxar_de: ["e1_linha_tempo", "e1_pilares"],
-          campo: { rotulo: "Eu me engajo quando...", placeholder: "Eu me engajo quando..." }
+          campo: { rotulo: "Eu me engajo quando...", placeholder: "Eu me engajo quando..." },
+          perguntas: ["Eu me sinto desmotivado quando..."]
         },
         {
           id: "e1_habilidades",
           tipo: "texto_com_apoio",
           titulo: "O que eu já sei fazer",
-          instrucao: "Releia o que você respondeu na linha do tempo (o que funcionou, o que aprendeu) e nomeie as habilidades que enxerga ali. Se travar, abra a lista de exemplos abaixo como apoio.",
-          perguntas: ["Quais habilidades aparecem na minha trajetória?"],
+          instrucao: [
+            "Existem dois caminhos para reconhecer suas habilidades.",
+            "O primeiro é o que a sua história revela: na atividade da linha do tempo, você listou atividades que já realizou em cada função — isso é o olhar de fora para dentro.",
+            "O segundo é o que você naturalmente já é: aquilo que faz com tanta facilidade que nem considera uma habilidade — isso é o olhar de dentro para fora. Os dois, juntos, formam um retrato mais completo do que você traz para o trabalho."
+          ],
+          perguntas: [
+            "Que habilidades aparecem na minha trajetória?",
+            "O que você faz com tanta naturalidade que nem percebe que é diferencial?",
+            "O que você aprende com mais rapidez do que as pessoas ao seu redor?"
+          ],
           apoio: {
             titulo: "Exemplos de habilidades (clique para abrir)",
             itens: ["comunicação", "vendas", "negociação", "organização", "liderança", "ensinar / treinar",
@@ -79,8 +90,14 @@ const CONTEUDO = {
           id: "e1_permanecer",
           tipo: "eixos",
           titulo: "O que precisa existir pra eu conseguir permanecer",
-          instrucao: "Para cada item, descreva o que precisa existir no seu próximo ambiente de trabalho.",
-          eixos: ["Ambiente", "Tipo de atividade", "Nível de autonomia", "Retornos esperados", "Rotina"]
+          instrucao: "Para cada item, descreva o que precisa existir no seu próximo ambiente de trabalho. Há uma lista de sugestões para cada item, porém você deve refletir para identificar as próprias necessidades.",
+          eixos: [
+            { rotulo: "Ambiente", exemplos: ["Presencial", "Remoto", "Híbrido", "Empresa grande", "Empresa pequena", "Por conta própria", "Com equipe", "Mais sozinho", "Ambiente dinâmico", "Ambiente calmo", "Externo (campo / rua)"] },
+            { rotulo: "Tipo de atividade", exemplos: ["Criar e desenvolver", "Executar e entregar", "Ensinar e treinar", "Atender pessoas", "Analisar e resolver problemas", "Vender e convencer", "Organizar e planejar", "Liderar equipes", "Trabalhar com dados", "Cuidar de alguém ou algo"] },
+            { rotulo: "Nível de autonomia", exemplos: ["Muita autonomia (decido como e quando)", "Autonomia moderada (tenho direção e escolho o caminho)", "Estrutura clara (prefiro saber o que se espera de mim)", "Trabalho próximo a outras pessoas"] },
+            { rotulo: "Retornos esperados", exemplos: ["Remuneração acima da média", "Estabilidade e previsibilidade", "Aprendizado constante", "Impacto e contribuição", "Reconhecimento e visibilidade", "Flexibilidade e qualidade de vida", "Construir algo meu", "Progressão de carreira"] },
+            { rotulo: "Rotina", exemplos: ["Horário fixo", "Horário flexível", "Home office", "Presencial", "Dias variados", "Ritmo intenso", "Ritmo tranquilo", "Sem hora extra", "Viagens frequentes"] }
+          ]
         }
       ]
     },
@@ -89,23 +106,28 @@ const CONTEUDO = {
     {
       numero: 2,
       nome: "Ultrapassar",
-      subtitulo: "O que te manteve parada até agora",
+      subtitulo: "O que eu preciso vencer para chegar aonde quero",
       modulos: [
         {
           id: "e2_padrao",
           tipo: "texto",
           titulo: "Meu padrão",
-          instrucao: "Olhe para suas experiências com honestidade.",
+          instrucao: "Olhe para as suas experiências e reflita: O que você faz quando as coisas ficam difíceis? Tente se lembrar de duas situações desafiadoras que viveu profissionalmente — uma com resultado insatisfatório e outra com resultado satisfatório.",
           perguntas: [
-            "O que você faz quando as coisas ficam difíceis?",
-            "E o que isso custou a você?"
+            "Situação 1: descreva brevemente o que aconteceu",
+            "Situação 1: qual foi o resultado insatisfatório?",
+            "Situação 2: descreva brevemente o que aconteceu",
+            "Situação 2: qual foi o resultado satisfatório?",
+            "O que eu fiz em ambas as situações?",
+            "O que eu fiz somente quando tive um bom resultado?",
+            "O que eu fiz somente quando tive um mau resultado?"
           ]
         },
         {
           id: "e2_necessidade",
           tipo: "selecao_e_texto",
-          titulo: "Trabalho e necessidade emocional",
-          instrucao: "O que você espera que o trabalho te dê além de dinheiro? Selecione o que reconhecer em você.",
+          titulo: "O que o trabalho precisa me dar",
+          instrucao: "Além do salário, o trabalho atende a outras necessidades — e elas influenciam nossas escolhas mais do que percebemos. Marque o que você reconhece em você. Procure considerar o que é mais relevante, não o que seria ideal ter.",
           opcoes: ["Reconhecimento", "Pertencimento", "Identidade", "Propósito", "Aprovação",
                    "Status / prestígio", "Autonomia", "Liberdade geográfica", "Estabilidade / segurança",
                    "Aprendizado constante", "Desafio", "Flexibilidade de horário",
@@ -115,19 +137,22 @@ const CONTEUDO = {
         {
           id: "e2_trava",
           tipo: "duas_colunas",
-          titulo: "O que me trava de verdade",
+          titulo: "O que percebo que me atrapalha profissionalmente",
           instrucao: "Preencha as duas lacunas e compare. A diferença entre elas costuma revelar o obstáculo real.",
-          coluna_a: "O que me impede de verdade de mudar (o que eu imagino)",
-          coluna_b: "O que tem evidência real de que pode acontecer (fatos reais, não sensações)"
+          coluna_a: "HOJE qual o maior obstáculo para uma mudança? (tudo o que você imagina)",
+          coluna_b: "HOJE o que, de fato, pode acontecer? (fatos reais que não sejam hipóteses e nem sensações)"
         },
         {
           id: "e2_desenvolver",
           tipo: "texto",
-          titulo: "O que preciso desenvolver",
-          instrucao: "Escolha um ponto só — o mais importante.",
+          titulo: "Desenvolver habilidades para crescer",
+          instrucao: "Liste as habilidades ou competências que você sente que gostaria de desenvolver — o que acrescentaria, o que faria diferença, o que você percebe que falta. Coloque até 5.",
           perguntas: [
-            "Das coisas que aparecem na minha forma de agir e de me relacionar, qual é a que talvez possa me atrapalhar mais no próximo movimento?",
-            "Qual ação mais simples eu posso ter para começar a modificar isso?"
+            "1.",
+            "2.",
+            "3.",
+            "4.",
+            "5."
           ]
         },
         {
@@ -137,7 +162,7 @@ const CONTEUDO = {
           instrucao: "Pense no momento em que a novidade passa, o entusiasmo cai e a dificuldade aparece.",
           perguntas: [
             "Como você costuma reagir nesse momento?",
-            "O que você pretende fazer de diferente dessa vez?"
+            "De que forma a sua atitude te aproxima ou te afasta do objetivo?"
           ]
         }
       ]
@@ -147,21 +172,25 @@ const CONTEUDO = {
     {
       numero: 3,
       nome: "Mapear",
-      subtitulo: "O que o mundo oferece para quem já tem história",
+      subtitulo: "O que eu quero do que o mundo tem pra oferecer",
       modulos: [
         {
           id: "e3_dinheiro",
           tipo: "orcamento",
           titulo: "Minha relação com dinheiro agora",
-          instrucao: "Preencha, linha a linha, o quanto você precisa (o necessário) e o quanto seria confortável (o desejável). Ao final, você terá dois números reais.",
+          instrucao: [
+            "O dinheiro é o elemento que sustenta qualquer relação de trabalho — e por isso merece atenção real nesse processo.",
+            "A forma como nos relacionamos com ele influencia as escolhas que fazemos, as ocupações que aceitamos e os motivos pelos quais nos mantemos em situações que nem sempre são confortáveis.",
+            "Preencha, linha a linha, o quanto você precisa (o necessário) e o quanto seria confortável (o desejável). Ao final, você terá dois números reais."
+          ],
           linhas: ["Moradia", "Transporte", "Alimentação", "Saúde", "Educação / cursos", "Lazer", "Reserva / poupança"],
           colunas: ["O necessário", "O desejável"]
         },
         {
           id: "e3_territorios",
           tipo: "territorios",
-          titulo: "Territórios profissionais possíveis",
-          instrucao: "Considerando quem você é e do que você precisa para permanecer, qual desses territórios tem mais condições de entregar isso? Reflita sobre cada um.",
+          titulo: "Cenários profissionais possíveis",
+          instrucao: "Considerando quem você é e do que você precisa para permanecer, qual desses cenários tem mais condições de entregar isso? Reflita sobre cada um.",
           territorios: [
             { rotulo: "Empresa privada", ajuda: "Trabalhar contratada por uma empresa" },
             { rotulo: "Empresa pública", ajuda: "Concurso, órgão público, estabilidade" },
@@ -184,13 +213,14 @@ const CONTEUDO = {
         {
           id: "e3_aprofundar",
           tipo: "oportunidades",
-          titulo: "O que vale aprofundar",
-          instrucao: "Adicione as oportunidades ou caminhos que surgiram para você até aqui (por exemplo: um cargo, uma área, um negócio, um concurso). Para cada um, responda as três perguntas. No final, foque nos que tiverem mais \"Sim\".",
+          titulo: "O que vale considerar",
+          instrucao: "Agora é hora de explorar o que existe lá fora. Pesquise no LinkedIn, em sites de vagas ou em qualquer outra fonte: um concurso, um cargo em outra empresa, uma mudança dentro da mesma empresa, um negócio próprio... Não precisa ser uma decisão — é uma exploração. Para cada possibilidade que chamar atenção, responda às perguntas. No final, avalie quais tiveram mais \"Sim\".",
           campoNome: "Oportunidade ou caminho",
           perguntas: [
             "Combina com o que descobri sobre mim?",
             "É viável financeiramente agora?",
-            "Tem a ver com o que eu já sei fazer?"
+            "Tem a ver com o que eu já sei fazer?",
+            "Me aproxima do objetivo de vida que tenho agora?"
           ],
           niveis: ["Sim", "Mais ou menos", "Não"]
         }
@@ -205,14 +235,12 @@ const CONTEUDO = {
       modulos: [
         {
           id: "e4_mudanca",
-          tipo: "grupos_e_texto",
+          tipo: "texto",
           titulo: "Que tipo de mudança é essa",
-          instrucao: "Leia o seu momento com honestidade e calibre a expectativa antes de montar o plano.",
-          grupos: [
-            { rotulo: "O que muda?", opcoes: ["Dentro da mesma área", "Virada de rota (mudar de direção)"] },
-            { rotulo: "Em que ritmo?", opcoes: ["Aos poucos (gradual)", "De uma vez (ruptura)"] }
-          ],
-          pergunta_texto: "Em uma frase: que tipo de mudança você está prestes a fazer?"
+          instrucao: "Avalie o seu momento e ajuste a expectativa antes de montar o planejamento.",
+          perguntas: [
+            "Descreva a mudança que você está considerando fazer. Procure dar o máximo de detalhes que puder, isto é, como tem planejado isso dentro da sua cabeça."
+          ]
         },
         {
           id: "e4_capitulo",
@@ -229,36 +257,38 @@ const CONTEUDO = {
           id: "e4_aprender",
           tipo: "texto",
           titulo: "O que preciso aprender",
-          instrucao: "Sem lista de cursos. Seja cirúrgico.",
+          instrucao: "Seja objetivo nos próximos passos.",
           perguntas: [
-            "Dado o caminho que escolhi, qual é a lacuna mais urgente?",
-            "Qual é o menor passo possível para começar a fechá-la?"
+            "Diante do caminho que escolhi, qual a necessidade mais urgente que preciso resolver?",
+            "Qual é o menor passo possível para começar a resolvê-la?"
           ]
         },
         {
           id: "e4_marca",
           tipo: "sintese",
           titulo: "Quem eu já sou profissionalmente",
-          instrucao: "Sua marca pessoal construída a partir da sua história — não do que você quer ser.",
+          instrucao: "Sua identidade profissional construída ao longo da sua trajetória.",
+          voz: "primeira",
           puxar_de: ["e1_linha_tempo", "e1_habilidades"],
           perguntas: [
             "O que aparece repetidamente na minha história profissional?",
             "O que as pessoas costumam me pedir ou reconhecer em mim?",
-            "Como você quer ser lembrado daqui a algum tempo?"
+            "Como eu quero ser lembrado daqui a algum tempo?"
           ]
         },
         {
           id: "e4_sinais",
           tipo: "texto",
           titulo: "Sinais de sucesso",
-          instrucao: "Defina três marcos concretos e com prazo. Se isso acontecer, significa que você está no rumo certo. Pequenos o suficiente para serem reais, grandes o suficiente para importar.",
+          instrucao: "Os sinais de sucesso não são projeções ou desejos — são fatos concretos que, quando acontecerem, vão indicar que você está no caminho certo. Defina três, com prazo.",
+          exemplos: "Exemplos: \"Fiz minha primeira conversa com alguém da área (prazo: 30 dias)\"; \"Concluí o curso que planejei (prazo: 60 dias)\"; \"Enviei meu primeiro currículo para a nova área (prazo: 3 meses)\"; \"Fechei meu primeiro cliente (prazo: 6 meses)\"; \"Minha renda mensal chegou a R$X (prazo: 12 meses)\".",
           perguntas: ["Sinal 1 (com prazo):", "Sinal 2 (com prazo):", "Sinal 3 (com prazo):"]
         },
         {
           id: "e4_compromissos",
           tipo: "texto",
           titulo: "Compromissos comigo mesmo",
-          instrucao: "Três respostas curtas que fecham o processo com intenção.",
+          instrucao: "Três respostas que vão te ajudar a permanecer no caminho e chegar ao objetivo.",
           perguntas: [
             "O que vou sustentar?",
             "O que não vou repetir?",
@@ -269,9 +299,9 @@ const CONTEUDO = {
           id: "e4_segundo_plano",
           tipo: "texto",
           titulo: "Em segundo plano",
-          instrucao: "Uma decisão tomada com reflexão e pesquisa tira o peso do medo de errar e transforma a mudança numa aposta consciente.",
+          instrucao: "Uma decisão tomada com reflexão e pesquisa tira o peso do medo de errar e transforma a sua história como matéria-prima para construir um novo caminho com sentido.",
           perguntas: [
-            "Daqui a quantos meses você vai reavaliar se esse caminho está funcionando?",
+            "Em quanto tempo você vai reavaliar se esse caminho está funcionando?",
             "Se nesse prazo não estiver funcionando, o que você vai fazer?"
           ]
         }
