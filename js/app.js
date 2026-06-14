@@ -4,7 +4,7 @@
 (function () {
   // Protege a página: sem senha válida, volta para o acesso.
   const dados = Armazenamento.ler();
-  if (!dados.senha) { window.location.href = "index.html"; return; }
+  if (dados.senha !== "rumo123") { window.location.href = "index.html"; return; }
 
   const etapas = CONTEUDO.etapas;
   const totalModulos = etapas.reduce((s, e) => s + e.modulos.length, 0);

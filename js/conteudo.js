@@ -53,7 +53,7 @@ const CONTEUDO = {
           id: "e1_engajamento",
           tipo: "sintese",
           titulo: "Minha fórmula de engajamento",
-          instrucao: "Olhando para tudo que você trouxe até aqui, complete a frase com o que a sua história prova — não com o que você acha que deveria querer.",
+          instrucao: "Olhando para tudo que você trouxe até aqui, complete a frase com o que a sua história comprova.",
           puxar_de: ["e1_linha_tempo", "e1_pilares"],
           campo: { rotulo: "Eu me engajo quando...", placeholder: "Eu me engajo quando..." },
           perguntas: ["Eu me sinto desmotivado quando..."]
@@ -127,7 +127,7 @@ const CONTEUDO = {
           id: "e2_necessidade",
           tipo: "selecao_e_texto",
           titulo: "O que o trabalho precisa me dar",
-          instrucao: "Além do salário, o trabalho atende a outras necessidades — e elas influenciam nossas escolhas mais do que percebemos. Marque o que você reconhece em você. Procure considerar o que é mais relevante, não o que seria ideal ter.",
+          instrucao: "Além do salário, o trabalho atende a outras necessidades — e elas influenciam nossas escolhas mais do que percebemos. Marque o que você reconhece em você. Procure considerar o que é mais relevante para você.",
           opcoes: ["Reconhecimento", "Pertencimento", "Identidade", "Propósito", "Aprovação",
                    "Status / prestígio", "Autonomia", "Liberdade geográfica", "Estabilidade / segurança",
                    "Aprendizado constante", "Desafio", "Flexibilidade de horário",

@@ -9,19 +9,30 @@
 <body>
   <div class="container">
     <div class="card" style="margin-top:60px; text-align:center;">
+      <img src="img/Rumo_Logo.png" alt="Instituto Rumo" style="width:100px; border-radius:12px; margin-bottom:16px;">
       <h1>Novo Rumo</h1>
       <p>Sua história profissional já tem as pistas das respostas que você precisa; a gente só precisa organizar para você ter clareza.</p>
-      <button class="btn" id="entrar" style="margin-top:16px;">Começar</button>
+      <input class="input" type="password" id="senha" placeholder="Senha de acesso" style="margin-top:16px; width:100%; box-sizing:border-box;">
+      <button class="btn" id="entrar" style="margin-top:12px;">Começar</button>
+      <p id="erro" style="color:#c0392b; display:none; margin-top:8px;">Senha incorreta.</p>
     </div>
   </div>
   <script src="js/armazenamento.js"></script>
   <script>
-    // PROTÓTIPO — sem senha para revisão de conteúdo
+    const SENHA_CORRETA = "rumo123";
     document.getElementById("entrar").addEventListener("click", () => {
+      const digitada = document.getElementById("senha").value;
+      if (digitada !== SENHA_CORRETA) {
+        document.getElementById("erro").style.display = "block";
+        return;
+      }
       const dados = Armazenamento.ler();
-      dados.senha = "PROTOTIPO";
+      dados.senha = SENHA_CORRETA;
       localStorage.setItem(Armazenamento.CHAVE, JSON.stringify(dados));
       window.location.href = "app.html";
+    });
+    document.getElementById("senha").addEventListener("keydown", e => {
+      if (e.key === "Enter") document.getElementById("entrar").click();
     });
   </script>
 </body>
