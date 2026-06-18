@@ -18,11 +18,11 @@ function rotuloLegivel(valor) {
 
 function gerarPDF() {
   const dados = Armazenamento.ler();
-  const win = window.open("", "_blank");
   let html = '<html><head><meta charset="utf-8"><title>Mapa da minha jornada — Novo Rumo</title>' +
     '<style>body{font-family:Montserrat,Arial,sans-serif;color:#282828;max-width:680px;margin:0 auto;padding:30px;}' +
     'h1{color:#3B503F;}h2{color:#91B096;margin-top:24px;}h3{color:#3B503F;margin-top:16px;}' +
-    'pre{white-space:pre-wrap;background:#EFE7D6;padding:12px;border-radius:8px;font-family:inherit;}</style></head><body>';
+    'pre{white-space:pre-wrap;background:#EFE7D6;padding:12px;border-radius:8px;font-family:inherit;}' +
+    '@media print{body{padding:10px;}}</style></head><body>';
   html += "<h1>Mapa da minha jornada — Novo Rumo</h1>";
   CONTEUDO.etapas.forEach(et => {
     html += "<h2>Etapa " + et.numero + " — " + et.nome + "</h2>";
@@ -32,8 +32,12 @@ function gerarPDF() {
       if (texto) { html += "<h3>" + m.titulo + "</h3><pre>" + texto.replace(/</g, "&lt;") + "</pre>"; }
     });
   });
-  html += "</body></html>";
-  win.document.write(html);
-  win.document.close();
-  setTimeout(() => win.print(), 400);
+  html += "<script>window.onload=function(){window.print();}<\/script></body></html>";
+
+  const blob = new Blob([html], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  const win = window.open(url, "_blank");
+  if (!win) {
+    alert("Seu navegador bloqueou a janela de impressão. Permita popups para este site e tente novamente.");
+  }
 }
